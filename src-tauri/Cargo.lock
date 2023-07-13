@@ -2557,6 +2557,7 @@ version = "1.0.0"
 dependencies = [
  "serde",
  "serde_json",
+ "serial2",
  "tauri",
  "tauri-build",
 ]
@@ -2915,6 +2916,17 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.25",
+]
+
+[[package]]
+name = "serial2"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "072775cc5125115d408620e6925784edecf151e71e20b7137452e64ee7644df0"
+dependencies = [
+ "cfg-if",
+ "libc",
+ "winapi",
 ]
 
 [[package]]
