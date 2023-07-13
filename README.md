@@ -1,8 +1,10 @@
-# Svelte + Vite
+# Aplicación receptora de Interstellar
 
-This template should help get you started developing with Tauri and Svelte in Vite.
+Este programa se encarga de interpretar, mostrar y guardar los datos transmitidos por nuestro CanSat.
 
-## Recommended IDE Setup
+Por ahora está en fase de prueba de concepto, no se debe esperar buen código :D
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
-
+Confirmación de features:
+- [x] Visualización de la orientación del satélite (falta un modelo 3D).
+- [ ] Mapa mostrando la posición del satélite (usar GMaps).
+- [ ] Gráficos mostrando los datos (usar [Chart.js](https://github.com/chartjs/Chart.js)).
