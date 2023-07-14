@@ -54,10 +54,10 @@ fn convert_sensor_data_to_json(input: &str) -> Result<Value, serde_json::Error> 
         pressure: 0,
         dht_temperature: 0.0,
         humidity: 0.0,
-        w: 0.0,
-        x: 0.0,
-        y: 0.0,
-        z: 0.0,
+        w: 2.0,
+        x: 2.0,
+        y: 2.0,
+        z: 2.0,
     };
 
     for entry in input.trim().split(';') {
@@ -78,10 +78,10 @@ fn convert_sensor_data_to_json(input: &str) -> Result<Value, serde_json::Error> 
             "P" => sensor_data.pressure = parts[1].parse().unwrap_or(0),
             "D-T" => sensor_data.dht_temperature = parts[1].parse().unwrap_or(0.0),
             "H" => sensor_data.humidity = parts[1].parse().unwrap_or(0.0),
-            "W" => sensor_data.w = parts[1].parse().unwrap_or(0.0),
-            "X" => sensor_data.x = parts[1].parse().unwrap_or(0.0),
-            "Y" => sensor_data.y = parts[1].parse().unwrap_or(0.0),
-            "Z" => sensor_data.z = parts[1].parse().unwrap_or(0.0),
+            "W" => sensor_data.w = parts[1].parse().unwrap_or(2.0),
+            "X" => sensor_data.x = parts[1].parse().unwrap_or(2.0),
+            "Y" => sensor_data.y = parts[1].parse().unwrap_or(2.0),
+            "Z" => sensor_data.z = parts[1].parse().unwrap_or(2.0),
             _ => (),
         }
     }
@@ -124,6 +124,7 @@ fn main() {
                         }
                         println!("{:?}", str::from_utf8(&buffer));
                         let sensor_data: String = str::from_utf8(&buffer).unwrap().trim_matches(char::from(0)).to_string();
+                        buffer = [0; 192];
                         let json_sensor_data = convert_sensor_data_to_json(&sensor_data).unwrap();
                         let reply: Payload = Payload {
                             message: json_sensor_data.to_string(),

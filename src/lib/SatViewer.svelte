@@ -57,6 +57,9 @@
         scene.add(container3D);
 
         function updateRotation(w, x, y, z) {
+            if (w == 2 || x == 2 || y == 2 || z == 2) {
+                return;
+            }
             container3D.quaternion.fromArray([-w, y, z, x]);
         }
 
