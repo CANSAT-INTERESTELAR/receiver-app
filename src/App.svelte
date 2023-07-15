@@ -5,7 +5,7 @@
     import Serial from './lib/Serial.svelte';
 
   onMount(async () => {
-    emit('page-load', '');
+    await emit('page-load', '');
   })
 </script>
 
