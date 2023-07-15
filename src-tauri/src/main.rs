@@ -2,7 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod sat_data;
-use sat_data::json_from_serial;
 
 use serial2::SerialPort;
 use std::path::PathBuf;
@@ -12,6 +11,10 @@ use std::sync::Arc;
 use serde_json::Value;
 use serde::Serialize;
 use tauri::Window;
+
+use crate::sat_data::SatelliteData;
+use crate::sat_data::json_from_satellite_data;
+use crate::sat_data::satellite_data_from_serial;
 
 #[derive(Clone, Serialize)]
 struct Payload {
@@ -40,29 +43,41 @@ fn main() {
             window.listen("connect", move |event| {
                 let port: String = event.payload().unwrap().replace("\"", "");
                 println!("Got connect with payload: {}", port);
-                let port: SerialPort = SerialPort::open(port, 115200).unwrap();
+                let serial_port: SerialPort;
+                if let Ok(sp) = SerialPort::open(&port, 115200) {
+                    serial_port = sp;
+                } else {
+                    window_clone
+                        .emit("error", Payload {message: format!("Error connecting to {}", &port)})
+                        .expect("failed to emit");
+                    return;
+                }
+
                 let mut buffer = [0; 192];
 
                 let window = Arc::clone(&window_clone);
                 thread::spawn(move || {
                     loop {
-                        let size: usize = port.read(&mut buffer).unwrap();
+                        let size: usize = serial_port.read(&mut buffer).unwrap();
                         if size == 0 {
                             continue;
                         }
                         println!("{:?}", str::from_utf8(&buffer));
-                        let sensor_data: String = match str::from_utf8(&buffer) {
+                        let serial_data: String = match str::from_utf8(&buffer) {
                             Ok(x) => x.trim_matches(char::from(0)).to_string(),
                             _ => continue,
                         };
                         buffer = [0; 192];
-                        let json_sensor_data: Value = json_from_serial(&sensor_data);
+
+                        let sat_data: SatelliteData = satellite_data_from_serial(&serial_data);
+                        
+                        let json_sat_data: Value = json_from_satellite_data(sat_data);
                         let reply: Payload = Payload {
-                            message: json_sensor_data.to_string(),
+                            message: json_sat_data.to_string(),
                         };
 
                         window
-                            .emit("rx", Some(reply))
+                            .emit("rx", reply)
                             .expect("failed to emit");
                     }
                 });
@@ -76,7 +91,7 @@ fn main() {
 
                 println!("Sending available-ports with payload: {}", reply.message);
                 window__
-                    .emit("available-ports", Some(reply))
+                    .emit("available-ports", reply)
                     .expect("failed to emit");
             });
         })
