@@ -1,13 +1,7 @@
 <script>
     import { onMount } from 'svelte';
-    import { listen } from '@tauri-apps/api/event';
     import * as THREE from 'three';
     import { latestRX } from './stores';
-
-    let lastRXW;
-    let lastRXX;
-    let lastRXY;
-    let lastRXZ;
 
     onMount(async () => {
         const container = document.getElementById('threejs-container');
@@ -16,7 +10,6 @@
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(400, 300);
         container.appendChild(renderer.domElement);
-        var satelliteGroup = new THREE.Group();
         const camera = new THREE.PerspectiveCamera(35, 4/3, 0.1, 1000);
 
         // Set the camera position for an isometric view
@@ -69,11 +62,7 @@
         }
 
         latestRX.subscribe(rx => {
-            lastRXW = rx.w;
-            lastRXX = rx.x;
-            lastRXY = rx.y;
-            lastRXZ = rx.z;
-            updateRotation(lastRXW, lastRXX, lastRXY, lastRXZ);
+            updateRotation(rx.w, rx.x, rx.y, rx.z);
         });
 
         updateRotation(1, 0, 0, 0);
@@ -82,4 +71,3 @@
 </script>
 
 <div id="threejs-container"></div>
-DEBUG CUATERNIÓN: W: {lastRXW}, X: {lastRXX}, Y: {lastRXY}, Z: {lastRXZ}
