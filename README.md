@@ -1,4 +1,4 @@
-# Aplicación receptora de Interstellar
+# Aplicación receptora de Interestelar
 
 Este programa se encarga de interpretar, mostrar y guardar los datos transmitidos por nuestro CanSat.
 
