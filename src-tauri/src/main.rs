@@ -11,6 +11,7 @@ use std::str;
 use std::sync::Arc;
 use serde_json::Value;
 use serde::Serialize;
+use tauri::Window;
 
 #[derive(Clone, Serialize)]
 struct Payload {
@@ -28,13 +29,13 @@ fn get_available_ports() -> String {
 
 fn main() {
     tauri::Builder::default()
-        .on_page_load(|window, _| {
+        .on_page_load(|window: Window, _| {
             println!("Available Ports: {}", get_available_ports());
-            let window_: tauri::Window = window.clone();
-            let window__: tauri::Window = window.clone();
+            let window_: Window = window.clone();
+            let window__: Window = window.clone();
 
-            let window = Arc::new(window);
-            let window_clone = Arc::clone(&window);
+            let window: Arc<Window> = Arc::new(window);
+            let window_clone: Arc<Window> = Arc::clone(&window);
 
             window.listen("connect", move |event| {
                 let port: String = event.payload().unwrap().replace("\"", "");
