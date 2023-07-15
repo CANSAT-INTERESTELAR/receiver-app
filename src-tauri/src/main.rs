@@ -2,13 +2,14 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod sat_data;
-use sat_data::convert_satellite_data_to_json;
+use sat_data::json_from_serial;
 
 use serial2::SerialPort;
 use std::path::PathBuf;
 use std::thread;
 use std::str;
 use std::sync::Arc;
+use serde_json::Value;
 use serde::Serialize;
 
 #[derive(Clone, Serialize)]
@@ -51,7 +52,7 @@ fn main() {
                         println!("{:?}", str::from_utf8(&buffer));
                         let sensor_data: String = str::from_utf8(&buffer).unwrap().trim_matches(char::from(0)).to_string();
                         buffer = [0; 192];
-                        let json_sensor_data = convert_satellite_data_to_json(&sensor_data).unwrap();
+                        let json_sensor_data: Value = json_from_serial(&sensor_data);
                         let reply: Payload = Payload {
                             message: json_sensor_data.to_string(),
                         };

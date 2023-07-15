@@ -2,7 +2,7 @@ use serde::{Serialize, Deserialize};
 use serde_json::{json, Value};
 
 #[derive(Serialize, Deserialize)]
-struct SatelliteData {
+pub struct SatelliteData {
     mq4: bool,
     mq7: bool,
     mq135: bool,
@@ -21,7 +21,7 @@ struct SatelliteData {
     z: f64,
 }
 
-pub fn convert_satellite_data_to_json(input: &str) -> Result<Value, serde_json::Error> {
+pub fn satellite_data_from_serial(input: &str) -> SatelliteData {
     let mut sat_data: SatelliteData = SatelliteData {
         mq4: false,
         mq7: false,
@@ -41,11 +41,17 @@ pub fn convert_satellite_data_to_json(input: &str) -> Result<Value, serde_json::
         z: 2.0,
     };
 
+    // For "LAT:0.000;LON:1.111"
+    // Entry will be LAT:0.000
+    // Parts[0] will be LAT
+    // Parts[1] will be 0.000
     for entry in input.trim().split(';') {
         let parts: Vec<&str> = entry.split(':').collect();
+        // Avoid parsing entries with multiple ":"
         if parts.len() != 2 {
             continue;
         }
+
         match parts[0] {
             "MQ4" => sat_data.mq4 = parts[1].parse().unwrap_or(false),
             "MQ7" => sat_data.mq7 = parts[1].parse().unwrap_or(false),
@@ -67,6 +73,13 @@ pub fn convert_satellite_data_to_json(input: &str) -> Result<Value, serde_json::
         }
     }
 
-    let json_data = json!(sat_data);
-    Ok(json_data)
+    sat_data
+}
+
+pub fn json_from_satellite_data(sat_data: SatelliteData) -> Value {
+    json!(sat_data)
+}
+
+pub fn json_from_serial(input: &str) -> Value {
+    json_from_satellite_data(satellite_data_from_serial(input))
 }
