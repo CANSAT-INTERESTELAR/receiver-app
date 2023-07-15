@@ -50,7 +50,10 @@ fn main() {
                             continue;
                         }
                         println!("{:?}", str::from_utf8(&buffer));
-                        let sensor_data: String = str::from_utf8(&buffer).unwrap().trim_matches(char::from(0)).to_string();
+                        let sensor_data: String = match str::from_utf8(&buffer) {
+                            Ok(x) => x.trim_matches(char::from(0)).to_string(),
+                            _ => continue,
+                        };
                         buffer = [0; 192];
                         let json_sensor_data: Value = json_from_serial(&sensor_data);
                         let reply: Payload = Payload {
