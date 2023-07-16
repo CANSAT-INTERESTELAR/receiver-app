@@ -6,8 +6,6 @@ mod sat_data;
 use serial2::SerialPort;
 use tauri::AppHandle;
 use tauri::Manager;
-use tauri::api::file;
-use std::os::raw;
 use std::path::PathBuf;
 use std::thread;
 use std::str;
