@@ -6,6 +6,8 @@ mod sat_data;
 use serial2::SerialPort;
 use tauri::AppHandle;
 use tauri::Manager;
+use tauri::api::file;
+use std::os::raw;
 use std::path::PathBuf;
 use std::thread;
 use std::str;
@@ -82,10 +84,13 @@ fn connect(app: AppHandle, port: String) {
     thread::spawn(move || {
         let start_log_utc: &str = &Utc::now().to_rfc3339();
         let mut buffer: [u8; 192] = [0; 192];
+        let local_app_path: PathBuf = window.app_handle().path_resolver().app_local_data_dir().unwrap();
+        let clean_timestamp_log: String = remove_char(format!("{}.log", start_log_utc), ':');
+        let file_name: PathBuf = local_app_path.join(clean_timestamp_log);
         let mut file = OpenOptions::new()
                 .create(true)
                 .append(true)
-                .open(window.app_handle().path_resolver().app_local_data_dir().unwrap().join(remove_char(format!("{}.log", start_log_utc), ':')))
+                .open(file_name)
                 .unwrap();
 
         loop {
@@ -101,10 +106,8 @@ fn connect(app: AppHandle, port: String) {
             println!("{:?}", str::from_utf8(&buffer));
 
             // Get a String with all the '\0's removed (the buffer is all '\0' initially)
-            let serial_data: String = match str::from_utf8(&buffer) {
-                Ok(x) => x.trim_matches(char::from(0)).to_string(),
-                _ => continue,
-            };
+            let raw_serial: String = str::from_utf8(&buffer).unwrap().to_string();
+            let serial_data: String = remove_char(raw_serial, char::from(0));
             buffer = [0; 192];
 
             let sat_data: SatelliteData = satellite_data_from_serial(&serial_data);
