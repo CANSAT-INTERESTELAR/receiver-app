@@ -82,5 +82,9 @@ pub fn json_from_satellite_data(sat_data: SatelliteData) -> Value {
 
 // Input pressure in Pascals
 pub fn height_from_pressure(pressure: u32) -> f32 {
+    if pressure == 0 {
+        return 0.0;
+    }
+    
     return 44330.0*(1.0-(pressure as f32/101325.0).powf(1.0/5.255))
 }
