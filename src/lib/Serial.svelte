@@ -1,6 +1,7 @@
 <script>
     import { onMount } from 'svelte';
-    import { listen, emit } from '@tauri-apps/api/event'
+    import { listen } from '@tauri-apps/api/event'
+    import { invoke } from '@tauri-apps/api';
     import Select from 'svelte-select';
     import { Button } from '@svelteuidev/core';
     import { latestHeightByPressure, latestRX } from './stores.js';
@@ -10,13 +11,16 @@
 
     onMount(async () => {
         await listen('available-ports', (event) => {
+            console.log(event.payload.message);
             parseAvailablePorts(event.payload.message);
-        })
+        });
 
         await listen('rx', (event) => {
             latestRX.set(JSON.parse(event.payload.sat_data));
             latestHeightByPressure.set(JSON.parse(event.payload.height_p));
-        })
+        });
+
+        await invoke('pageload');
 
         function parseAvailablePorts(ports) {
             availablePorts = ports.split(",");
@@ -29,7 +33,7 @@
             return;
         }
 
-        emit('connect', port);
+        invoke('connect', { port: port });
     }
 </script>
 
