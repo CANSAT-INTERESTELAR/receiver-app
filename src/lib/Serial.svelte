@@ -20,12 +20,16 @@
             latestHeightByPressure.set(JSON.parse(event.payload.height_p));
         });
 
-        await invoke('pageload');
+        await invoke('updateports');
 
         function parseAvailablePorts(ports) {
             availablePorts = ports.split(",");
         }
     });
+
+    async function updatePorts() {
+        await invoke('updateports');
+    }
 
     function connect() {
         let port = value?.label;
@@ -38,8 +42,21 @@
 </script>
 
 <div class="row">
-    <Select items={availablePorts} bind:value />
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <div class="full-width" on:click={updatePorts}>
+        <Select items={availablePorts} bind:value/>
+    </div>
     <Button color="dark" radius="md" size="md" on:click={connect}>
         Conectar
     </Button>
 </div>
+
+<style>
+    .full-width {
+        width: 100%;
+    }
+
+    :global(input) {
+        cursor: pointer !important; 
+    }
+</style>

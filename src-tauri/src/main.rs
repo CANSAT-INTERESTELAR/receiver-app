@@ -43,15 +43,13 @@ fn get_available_ports() -> String {
 }
 
 #[tauri::command]
-fn pageload(app: AppHandle) {
-    println!("Got pageload");
+fn updateports(app: AppHandle) {
     let reply: Message = Message {
         message: get_available_ports(),
     };
 
     let window: Window = app.get_window("main").expect("failed to get main window");
 
-    println!("Sending available-ports with payload: {}", reply.message);
     window
         .emit("available-ports", reply)
         .expect("failed to emit");
@@ -71,14 +69,13 @@ fn send_error(window: &Window, error: String) {
 
 #[tauri::command]
 fn connect(app: AppHandle, port: String) {
-    println!("Connect called");
     let window: Window = app.get_window("main").expect("failed to get main window");
     let port: String = port.replace("\"", "");
     let serial_port: SerialPort;
     if let Ok(sp) = SerialPort::open(&port, 115200) {
         serial_port = sp;
     } else {
-        send_error(&window, format!("Fue imposible conectarse a {}.", &port));
+        send_error(&window, format!("Error de conexión a {}.", &port));
         return;
     }
 
@@ -137,7 +134,7 @@ fn main() {
         .on_page_load(|_, _| {
             println!("Available Ports: {}", get_available_ports());
         })
-        .invoke_handler(tauri::generate_handler![pageload, connect])
+        .invoke_handler(tauri::generate_handler![updateports, connect])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
