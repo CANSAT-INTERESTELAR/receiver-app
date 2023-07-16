@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import * as THREE from 'three';
-    import { latestRX } from './stores';
+    import { latestSatRX } from './stores';
 
     onMount(async () => {
         const container = document.getElementById('threejs-container');
@@ -61,7 +61,7 @@
             renderer.render( scene, camera );
         }
 
-        latestRX.subscribe(rx => {
+        latestSatRX.subscribe(rx => {
             updateRotation(rx.w, rx.x, rx.y, rx.z);
         });
 

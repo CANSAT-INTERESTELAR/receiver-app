@@ -1,4 +1,4 @@
 import { writable } from 'svelte/store';
 
-export const latestRX = writable(0);
-export const latestHeightByPressure = writable(0);
+export const latestSatRX = writable(JSON.parse("{}"));
+export const totalRX = writable(JSON.parse("{\"data\":{}}"));

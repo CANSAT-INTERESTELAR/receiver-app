@@ -4,7 +4,7 @@
     import { invoke } from '@tauri-apps/api';
     import Select from 'svelte-select';
     import { Button } from '@svelteuidev/core';
-    import { latestHeightByPressure, latestRX } from './stores.js';
+    import { latestSatRX, totalRX } from './stores.js';
 
     let value;
     let availablePorts = ["None"];
@@ -16,8 +16,11 @@
         });
 
         await listen('rx', (event) => {
-            latestRX.set(JSON.parse(event.payload.sat_data));
-            latestHeightByPressure.set(JSON.parse(event.payload.height_p));
+            latestSatRX.set(JSON.parse(event.payload.sat_data));
+
+            let total = $totalRX;
+            total.data[event.payload.timestamp] = event.payload;
+            totalRX.set(total);
         });
 
         await invoke('updateports');
