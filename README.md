@@ -8,3 +8,6 @@ Confirmación de features:
 - [x] Visualización de la orientación del satélite (falta un modelo 3D).
 - [ ] Mapa mostrando la posición del satélite (usar GMaps).
 - [ ] Gráficos mostrando los datos (usar [Chart.js](https://github.com/chartjs/Chart.js)).
+
+Además de la altura obtenida por medio del GPS, la aplicación calcula la altura con la presión:
+![Altura en función de la presión](/images/presion-altura.png)

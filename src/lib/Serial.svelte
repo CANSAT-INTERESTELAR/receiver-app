@@ -3,7 +3,7 @@
     import { listen, emit } from '@tauri-apps/api/event'
     import Select from 'svelte-select';
     import { Button } from '@svelteuidev/core';
-    import { latestRX } from './stores.js';
+    import { latestHeightByPressure, latestRX } from './stores.js';
 
     let value;
     let availablePorts = ["None"];
@@ -14,7 +14,8 @@
         })
 
         await listen('rx', (event) => {
-            latestRX.set(JSON.parse(event.payload.message));
+            latestRX.set(JSON.parse(event.payload.sat_data));
+            latestHeightByPressure.set(JSON.parse(event.payload.height_p));
         })
 
         function parseAvailablePorts(ports) {

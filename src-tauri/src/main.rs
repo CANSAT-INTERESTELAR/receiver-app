@@ -13,11 +13,18 @@ use serde::Serialize;
 use tauri::Window;
 
 use crate::sat_data::SatelliteData;
+use crate::sat_data::height_from_pressure;
 use crate::sat_data::json_from_satellite_data;
 use crate::sat_data::satellite_data_from_serial;
 
 #[derive(Clone, Serialize)]
-struct Payload {
+struct Telemetry {
+  sat_data: String,
+  height_p: f32,
+}
+
+#[derive(Clone, Serialize)]
+struct Message {
   message: String,
 }
 
@@ -48,7 +55,7 @@ fn main() {
                     serial_port = sp;
                 } else {
                     window_clone
-                        .emit("error", Payload {message: format!("Error connecting to {}", &port)})
+                        .emit("error", Message {message: format!("Error connecting to {}", &port)})
                         .expect("failed to emit");
                     return;
                 }
@@ -70,10 +77,11 @@ fn main() {
                         buffer = [0; 192];
 
                         let sat_data: SatelliteData = satellite_data_from_serial(&serial_data);
-                        
+                        let height_by_pressure: f32 = height_from_pressure(sat_data.pressure);
                         let json_sat_data: Value = json_from_satellite_data(sat_data);
-                        let reply: Payload = Payload {
-                            message: json_sat_data.to_string(),
+                        let reply: Telemetry = Telemetry {
+                            sat_data: json_sat_data.to_string(),
+                            height_p: height_by_pressure,
                         };
 
                         window
@@ -85,7 +93,7 @@ fn main() {
 
             window_.listen("page-load", move |_| {
                 println!("Got page-load");
-                let reply: Payload = Payload {
+                let reply: Message = Message {
                     message: get_available_ports(),
                 };
 

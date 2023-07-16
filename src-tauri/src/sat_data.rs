@@ -3,22 +3,22 @@ use serde_json::{json, Value};
 
 #[derive(Serialize, Deserialize)]
 pub struct SatelliteData {
-    mq4: bool,
-    mq7: bool,
-    mq135: bool,
-    latitude: f64,
-    longitude: f64,
-    altitude: f64,
-    direction: f64,
-    speed: f64,
-    bmp_temperature: f64,
-    pressure: u32,
-    dht_temperature: f64,
-    humidity: f64,
-    w: f64,
-    x: f64,
-    y: f64,
-    z: f64,
+    pub mq4: bool,
+    pub mq7: bool,
+    pub mq135: bool,
+    pub latitude: f64,
+    pub longitude: f64,
+    pub altitude: f64,
+    pub direction: f64,
+    pub speed: f64,
+    pub bmp_temperature: f64,
+    pub pressure: u32,
+    pub dht_temperature: f64,
+    pub humidity: f64,
+    pub w: f64,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
 pub fn satellite_data_from_serial(input: &str) -> SatelliteData {
@@ -80,6 +80,7 @@ pub fn json_from_satellite_data(sat_data: SatelliteData) -> Value {
     json!(sat_data)
 }
 
-pub fn json_from_serial(input: &str) -> Value {
-    json_from_satellite_data(satellite_data_from_serial(input))
+// Input pressure in Pascals
+pub fn height_from_pressure(pressure: u32) -> f32 {
+    return 44330.0*(1.0-(pressure as f32/101325.0).powf(1.0/5.255))
 }
