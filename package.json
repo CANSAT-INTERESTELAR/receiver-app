@@ -12,6 +12,7 @@
   "dependencies": {
     "@svelteuidev/core": "^0.14.0",
     "@tauri-apps/api": "^1.4.0",
+    "radix-icons-svelte": "^1.2.1",
     "svelte-select": "^5.6.1",
     "three": "^0.154.0"
   },

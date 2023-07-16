@@ -55,7 +55,7 @@ fn main() {
                     serial_port = sp;
                 } else {
                     window_clone
-                        .emit("error", Message {message: format!("Error connecting to {}", &port)})
+                        .emit("error", Message {message: format!("Fue imposible conectarse a {}", &port)})
                         .expect("failed to emit");
                     return;
                 }
