@@ -3,6 +3,7 @@
   import Serial from './lib/Serial.svelte';
   import ErrorViewer from './lib/ErrorViewer.svelte';
   import DataViewer from './lib/DataViewer.svelte';
+  import Map from './lib/Map.svelte';
 </script>
 
 <main class="container">
@@ -11,4 +12,5 @@
   <SatViewer />
   <DataViewer />
   <Serial />
+  <Map />
 </main>
