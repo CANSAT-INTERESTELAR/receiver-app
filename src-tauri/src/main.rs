@@ -6,6 +6,7 @@ mod sat_data;
 use serial2::SerialPort;
 use tauri::AppHandle;
 use tauri::Manager;
+use dirs;
 use std::path::PathBuf;
 use std::thread;
 use std::str;
@@ -82,9 +83,9 @@ fn connect(app: AppHandle, port: String) {
     thread::spawn(move || {
         let start_log_utc: &str = &Utc::now().to_rfc3339();
         let mut buffer: [u8; 192] = [0; 192];
-        let local_app_path: PathBuf = window.app_handle().path_resolver().app_local_data_dir().unwrap();
+        let desktop_path: PathBuf = dirs::home_dir().unwrap().join("Desktop");
         let clean_timestamp_log: String = remove_char(format!("{}.log", start_log_utc), ':');
-        let file_name: PathBuf = local_app_path.join(clean_timestamp_log);
+        let file_name: PathBuf = desktop_path.join(clean_timestamp_log);
         let mut file = OpenOptions::new()
                 .create(true)
                 .append(true)

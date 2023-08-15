@@ -16,6 +16,10 @@
         });
 
         await listen('rx', (event) => {
+            if (JSON.parse(event.payload.sat_data).pressure == 0) {
+                return;
+            }
+            
             latestSatRX.set(JSON.parse(event.payload.sat_data));
 
             let total = $totalRX;
@@ -47,9 +51,9 @@
 <div class="row">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="full-width" on:click={updatePorts}>
-        <Select items={availablePorts} bind:value/>
+        <Select items={availablePorts} bind:value placeholder="Puerto serial"/>
     </div>
-    <Button color="dark" radius="md" size="md" on:click={connect}>
+    <Button color="dark" radius="sm" style="height: 40px" on:click={connect}>
         Conectar
     </Button>
 </div>
@@ -59,7 +63,14 @@
         width: 100%;
     }
 
-    :global(input) {
-        cursor: pointer !important; 
+    .row {
+        display: flex;
+        align-items: center;
     }
+
+    :global(input) {
+        cursor: pointer !important;
+    }
+
+
 </style>

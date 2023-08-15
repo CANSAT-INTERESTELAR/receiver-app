@@ -8,9 +8,9 @@
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xf6f6f6);
         const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(400, 300);
+        renderer.setSize(300, 230);
         container.appendChild(renderer.domElement);
-        const camera = new THREE.PerspectiveCamera(35, 4/3, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(35, 13/10, 0.1, 1000);
 
         // Set the camera position for an isometric view
         camera.position.set(2, 2, 2);

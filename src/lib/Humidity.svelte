@@ -6,19 +6,17 @@
 
     onMount(() => {
         totalRX.subscribe(rx => {
-            let graphData1 = [];
-            let graphData2 = [];
+            let graphData = [];
 
             for (const time in rx.data) {
                 let satData = JSON.parse(rx.data[time].sat_data);
-                graphData1.push({ x: new Date(time), y: satData.bmp_temperature });
-                graphData2.push({ x: new Date(time), y: satData.dht_temperature });
+                graphData.push({ x: new Date(time), y: satData.humidity });
             }
 
             new LineChart(
-            '#chart',
+            '#chart-hum',
             {
-                series: [graphData1, graphData2],
+                series: [graphData]
             },
             {
                 showArea: true,
@@ -39,4 +37,4 @@
     });
 </script>
 
-<div id="chart" style="height: 25vh"></div>
+<div id="chart-hum" style="width: 300px; height: 156px"></div>

@@ -35,7 +35,8 @@
         "fullscreen": false,
         "resizable": true,
         "title": "Receptor de Interestelar",
-        "width": 800,
+        "minWidth": 1330,
+        "width": 1330,
         "height": 600
       }
     ]

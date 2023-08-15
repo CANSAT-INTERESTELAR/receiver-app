@@ -1,12 +1,12 @@
 <script>
     import leaflet from 'leaflet';
     import { onMount } from 'svelte';
-    import { currentPosition } from './stores';
+    import { latestSatRX } from './stores';
 
     var positionList = [];
 
     onMount(() => {
-        var map = leaflet.map("map").setView([0, 0], 16);
+        var map = leaflet.map("map").setView([-38.95161, -68.0591], 12);
         leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap'
@@ -15,17 +15,19 @@
         function updatePosition(latitude, longitude) {
             positionList.push([latitude, longitude]);
             var polyline = leaflet.polyline(positionList, {color: 'red'}).addTo(map);
-            map.fitBounds(polyline.getBounds());
-            map.setView([latitude, longitude], 16);
+            map.setView([latitude, longitude], 14);
         }
 
-        currentPosition.subscribe(pos => {
-            if (pos.lat == 0 && pos.long == 0) {
+        latestSatRX.subscribe(rx => {
+            if (rx.latitude == undefined && rx.longitude == undefined) {
                 return;
             }
 
-            updatePosition(pos.lat, pos.long);
-            console.log(positionList);
+            if (rx.latitude == 0 && rx.longitude == 0) {
+                return;
+            }
+
+            updatePosition(rx.latitude, rx.longitude);
         });
     });
 </script>
@@ -36,7 +38,7 @@
 
 <style>
     #map {
-        width: 600px;
-        height: 400px;
+        width: 400px;
+        height: 300px;
     }
 </style>

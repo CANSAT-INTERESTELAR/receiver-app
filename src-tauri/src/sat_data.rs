@@ -3,9 +3,9 @@ use serde_json::{json, Value};
 
 #[derive(Serialize, Deserialize)]
 pub struct SatelliteData {
-    pub mq4: bool,
-    pub mq7: bool,
-    pub mq135: bool,
+    pub mq4: u16,
+    pub mq7: u16,
+    pub mq135: u16,
     pub latitude: f64,
     pub longitude: f64,
     pub altitude: f64,
@@ -23,9 +23,9 @@ pub struct SatelliteData {
 
 pub fn satellite_data_from_serial(input: &str) -> SatelliteData {
     let mut sat_data: SatelliteData = SatelliteData {
-        mq4: false,
-        mq7: false,
-        mq135: false,
+        mq4: 0,
+        mq7: 0,
+        mq135: 0,
         latitude: 0.0,
         longitude: 0.0,
         altitude: 0.0,
@@ -53,9 +53,9 @@ pub fn satellite_data_from_serial(input: &str) -> SatelliteData {
         }
 
         match parts[0] {
-            "MQ4" => sat_data.mq4 = parts[1].parse().unwrap_or(false),
-            "MQ7" => sat_data.mq7 = parts[1].parse().unwrap_or(false),
-            "MQ135" => sat_data.mq135 = parts[1].parse().unwrap_or(false),
+            "MQ4" => sat_data.mq4 = parts[1].parse().unwrap_or(0),
+            "MQ7" => sat_data.mq7 = parts[1].parse().unwrap_or(0),
+            "MQ135" => sat_data.mq135 = parts[1].parse().unwrap_or(0),
             "LAT" => sat_data.latitude = parts[1].parse().unwrap_or(0.0),
             "LON" => sat_data.longitude = parts[1].parse().unwrap_or(0.0),
             "ALT" => sat_data.altitude = parts[1].parse().unwrap_or(0.0),
